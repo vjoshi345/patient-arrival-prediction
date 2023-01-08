@@ -51,3 +51,11 @@ print('No. of rows where the sum of ESIs does not equal Total:',
            zip(data['ESI 1'], data['ESI 2'], data['ESI 3'], data['ESI 4'], data['ESI 5'], data['Total'])]))
 stats = data[['ESI 1', 'ESI 2', 'ESI 3', 'ESI 4', 'ESI 5', 'Total']].describe().reset_index()
 stats.to_csv('data/patient_arrival_stats.csv', index=False)
+
+stats_by_year = data.groupby(by=['year'], as_index=False).agg({'ESI 1': ['mean', 'median', 'max'],
+                                                               'ESI 2': ['mean', 'median', 'max'],
+                                                               'ESI 3': ['mean', 'median', 'max'],
+                                                               'ESI 4': ['mean', 'median', 'max'],
+                                                               'ESI 5': ['mean', 'median', 'max'],
+                                                               'Total': ['mean', 'median', 'max']})
+stats_by_year.to_csv('data/patient_arrival_stats_by_year.csv', index=False)
