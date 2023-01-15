@@ -7,13 +7,13 @@ def parse_func(date_col):
     return [datetime.strptime(d, '%m/%d/%Y %H:%M') for d in date_col]
 
 
-def plot_series(time, series, format="-", start=0, end=None, label=None):
+def plot_series(time, series, format="-", label=None, vlines=False):
     # Setup dimensions of the graph figure
     plt.figure(figsize=(18, 8))
 
     # Plot the time series data
-    plt.plot(time[start:end], series[start:end], format)
-    plt.ylim(-20, 50)
+    plt.plot(time, series, format)
+    plt.ylim(-10, 30)
 
     # Label the axes
     plt.xlabel("Hour")
@@ -22,8 +22,14 @@ def plot_series(time, series, format="-", start=0, end=None, label=None):
     if label:
         plt.legend(fontsize=14, labels=label)
 
-    # Overlay a grid on the graph
-    plt.grid(True)
+    # Overlay a grid or add vertical lines for every day
+    if vlines:
+        n, val, add = len(time), 24, 24
+        while val < n:
+            plt.axvline(val, color='black')
+            val = val + add
+    else:
+        plt.grid(True)
 
     # Draw the graph on screen
     plt.show()
@@ -39,6 +45,12 @@ data['day'] = [d.day for d in data['Date']]
 data['hour'] = [d.hour for d in data['Date']]
 print(data.shape)
 
-time_step = range(len(data['ESI 3']))
-plot_series(time=time_step[0:672], series=data['ESI 3'][0:672])
+time_step = range(len(data['Total']))
+# Plotting ESI 3
+# plot_series(time=time_step[0:672], series=data['ESI 3'][0:672])
 
+# Plotting ESI 2
+# plot_series(time=time_step[0:672], series=data['ESI 2'][0:672])
+
+# Plotting Total
+plot_series(time=time_step[0:672], series=data['Total'][0:672], vlines=True)
