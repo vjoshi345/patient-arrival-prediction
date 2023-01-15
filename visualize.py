@@ -13,7 +13,7 @@ def plot_series(time, series, format="-", label=None, vlines=False):
 
     # Plot the time series data
     plt.plot(time, series, format)
-    plt.ylim(-10, 30)
+    plt.ylim(-5, 10)
 
     # Label the axes
     plt.xlabel("Hour")
@@ -53,4 +53,13 @@ time_step = range(len(data['Total']))
 # plot_series(time=time_step[0:672], series=data['ESI 2'][0:672])
 
 # Plotting Total
-plot_series(time=time_step[0:672], series=data['Total'][0:672], vlines=True)
+# plot_series(time=time_step[0:672], series=data['Total'][0:672], vlines=True)
+
+# Plotting ESI 4
+# plot_series(time=time_step[4700:4800], series=data['ESI 4'][4700:4800], vlines=True)
+
+# Plotting ESI 1
+# plot_series(time=time_step[30000:30500], series=data['ESI 1'][30000:30500], vlines=True)
+
+# Plotting ESI 5
+plot_series(time=time_step[0:672], series=data['ESI 5'][0:672], vlines=True)
