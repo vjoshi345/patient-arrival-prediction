@@ -24,8 +24,8 @@ def plot_series(time, series, format="-", label=None, vlines=False):
 
     # Overlay a grid or add vertical lines for every day
     if vlines:
-        n, val, add = len(time), 24, 24
-        while val < n:
+        n, val, add = time[-1], time[0], 24
+        while val <= n:
             plt.axvline(val, color='black')
             val = val + add
     else:
