@@ -90,39 +90,40 @@ print(x_valid.shape)
 print(x_valid[0:10])
 
 # Neural Network model parameters
-window_size = 7
+window_size_list = [7, 24]
 batch_size = 32
 shuffle_buffer_size = 1000
 
-# Generate the dataset windows
-train_dataset = windowed_dataset(x_train, window_size, batch_size, shuffle_buffer_size)
+for window_size in window_size_list:
+    # Generate the dataset windows
+    train_dataset = windowed_dataset(x_train, window_size, batch_size, shuffle_buffer_size)
 
-# Build the single layer neural network
-l0 = tf.keras.layers.Dense(units=1,
-                           input_shape=[window_size],
-                           kernel_initializer=tf.keras.initializers.RandomNormal(mean=0.0, stddev=0.5, seed=1234),
-                           bias_initializer='zeros')
-model = tf.keras.models.Sequential([l0])
-print("Layer weights: \n {} \n".format(l0.get_weights()))
-model.summary()
+    # Build the single layer neural network
+    l0 = tf.keras.layers.Dense(units=1,
+                               input_shape=[window_size],
+                               kernel_initializer=tf.keras.initializers.RandomNormal(mean=0.0, stddev=0.5, seed=1234),
+                               bias_initializer='zeros')
+    model = tf.keras.models.Sequential([l0])
+    print("Layer weights: \n {} \n".format(l0.get_weights()))
+    model.summary()
 
-# Set the training parameters
-model.compile(loss="mse", optimizer=tf.keras.optimizers.SGD(learning_rate=1e-6, momentum=0.9))
+    # Set the training parameters
+    model.compile(loss="mse", optimizer=tf.keras.optimizers.SGD(learning_rate=1e-6, momentum=0.9))
 
-# Train the model
-model.fit(train_dataset, epochs=100)
+    # Train the model
+    model.fit(train_dataset, epochs=100)
 
-# Print the layer weights (after training)
-print("Layer weights after training: {}".format(l0.get_weights()))
+    # Print the layer weights (after training)
+    print("Layer weights after training: {}".format(l0.get_weights()))
 
-# Prediction
-forecast_series = series[split_time - window_size:-1]
-forecast = model_forecast(model, forecast_series, window_size, batch_size)
-# Drop single dimensional axis
-forecast = forecast.squeeze()
+    # Prediction
+    forecast_series = series[split_time - window_size:-1]
+    forecast = model_forecast(model, forecast_series, window_size, batch_size)
+    # Drop single dimensional axis
+    forecast = forecast.squeeze()
 
-print(f'\n *** Metrics for 1-layer NN (with window size={window_size}) ***')
-print('MSE (tf):', tf.keras.metrics.mean_squared_error(x_valid, forecast).numpy())
-print('MSE (manual):', mse(x_valid, forecast))
-print('MAE (tf):', tf.keras.metrics.mean_absolute_error(x_valid, forecast).numpy())
-print('MAE (manual):', mae(x_valid, forecast))
+    print(f'\n *** Metrics for 1-layer NN (with window size={window_size}) ***')
+    print('MSE (tf):', tf.keras.metrics.mean_squared_error(x_valid, forecast).numpy())
+    print('MSE (manual):', mse(x_valid, forecast))
+    print('MAE (tf):', tf.keras.metrics.mean_absolute_error(x_valid, forecast).numpy())
+    print('MAE (manual):', mae(x_valid, forecast))
