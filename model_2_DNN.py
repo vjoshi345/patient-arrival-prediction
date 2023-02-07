@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import tensorflow as tf
+from itertools import product
 from utils import mae, mse
 
 
@@ -90,16 +91,18 @@ print(x_valid.shape)
 print(x_valid[0:10])
 
 # Neural Network model parameters
-window_size_list = [7, 24]
+window_size_list = [7, 24, 168]
+act_fun_list = [None, 'relu']
 batch_size = 32
 shuffle_buffer_size = 1000
 
-for window_size in window_size_list:
+for window_size, act_fun in product(window_size_list, act_fun_list):
     # Generate the dataset windows
     train_dataset = windowed_dataset(x_train, window_size, batch_size, shuffle_buffer_size)
 
     # Build the single layer neural network
     l0 = tf.keras.layers.Dense(units=1,
+                               activation=act_fun,
                                input_shape=[window_size],
                                kernel_initializer=tf.keras.initializers.RandomNormal(mean=0.0, stddev=0.5, seed=1234),
                                bias_initializer='zeros')
@@ -122,7 +125,7 @@ for window_size in window_size_list:
     # Drop single dimensional axis
     forecast = forecast.squeeze()
 
-    print(f'\n *** Metrics for 1-layer NN (with window size={window_size}) ***')
+    print(f'\n *** Metrics for 1-layer NN (with window size={window_size} and activation function={act_fun}) ***')
     print('MSE (tf):', tf.keras.metrics.mean_squared_error(x_valid, forecast).numpy())
     print('MSE (manual):', mse(x_valid, forecast))
     print('MAE (tf):', tf.keras.metrics.mean_absolute_error(x_valid, forecast).numpy())
