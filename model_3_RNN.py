@@ -91,7 +91,7 @@ print(x_valid.shape)
 print(x_valid[0:10])
 
 # RNN model parameters
-window_size = 168
+window_size = 24
 batch_size = 32
 shuffle_buffer_size = 1000
 
@@ -101,7 +101,7 @@ train_dataset = windowed_dataset(x_train, window_size, batch_size, shuffle_buffe
 # Build the model
 model = tf.keras.models.Sequential([
   tf.keras.layers.Lambda(lambda x: tf.expand_dims(x, axis=-1), input_shape=[window_size]),
-  tf.keras.layers.SimpleRNN(units=48),
+  tf.keras.layers.SimpleRNN(units=40),
   tf.keras.layers.Dense(units=1, activation='relu')
 ])
 model.summary()
