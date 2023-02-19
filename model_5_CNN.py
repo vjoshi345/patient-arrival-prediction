@@ -92,31 +92,35 @@ print(x_valid[0:10])
 
 # RNN model parameters
 window_size = 24
-batch_size = 32
+batch_size = 16
 shuffle_buffer_size = 1000
 
 # Generate the dataset windows
 train_dataset = windowed_dataset(x_train, window_size, batch_size, shuffle_buffer_size)
 
 # Build the model
+tf.random.set_seed(43)
 model = tf.keras.models.Sequential([
-  tf.keras.layers.Lambda(lambda x: tf.expand_dims(x, axis=-1), input_shape=[window_size]),
-  tf.keras.layers.LSTM(units=48),
-  tf.keras.layers.Dense(units=1, activation='relu')
+  tf.keras.layers.Conv1D(filters=64, kernel_size=3,
+                      strides=1, padding="causal",
+                      activation="relu",
+                      input_shape=[window_size, 1]),
+  tf.keras.layers.LSTM(24),
+  tf.keras.layers.Dense(1, activation='relu')
 ])
 model.summary()
 
 # Set the learning rate
-learning_rate = 1e-6
+learning_rate = 1e-4
 
 # Set the optimizer
 optimizer = tf.keras.optimizers.SGD(learning_rate=learning_rate, momentum=0.9)
 
 # Set the training parameters
-model.compile(loss='mse', optimizer=optimizer)
+model.compile(loss='mse', optimizer=optimizer, metrics=['mae'])
 
 # Train the model
-history = model.fit(train_dataset, epochs=50)
+model.fit(train_dataset, epochs=30)
 
 # Prediction
 forecast_series = series[split_time - window_size:-1]
@@ -124,7 +128,7 @@ forecast = model_forecast(model, forecast_series, window_size, batch_size)
 # Drop single dimensional axis
 forecast = forecast.squeeze()
 
-print(f'\n *** Metrics for LSTM (with window size={window_size}) ***')
+print(f'\n *** Metrics for CNN-LSTM (with window size={window_size}) ***')
 print('MSE (tf):', tf.keras.metrics.mean_squared_error(x_valid, forecast).numpy())
 print('MSE (manual):', mse(x_valid, forecast))
 print('MAE (tf):', tf.keras.metrics.mean_absolute_error(x_valid, forecast).numpy())
