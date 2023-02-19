@@ -128,10 +128,22 @@ def run_model(inp_file, sev='ESI 3'):
 
     print(f'\n *** Metrics for RNN (with window size={window_size}) ***')
     print('MSE (tf):', tf.keras.metrics.mean_squared_error(x_valid, forecast).numpy())
-    print('MSE (manual):', mse(x_valid, forecast))
+    mse_manual = mse(x_valid, forecast)
+    print('MSE (manual):', mse_manual)
     print('MAE (tf):', tf.keras.metrics.mean_absolute_error(x_valid, forecast).numpy())
-    print('MAE (manual):', mae(x_valid, forecast))
+    mae_manual = mae(x_valid, forecast)
+    print('MAE (manual):', mae_manual)
+
+    return mse_manual, mae_manual
 
 
 if __name__ == '__main__':
-    run_model(inp_file='data/patient_arrival_data.csv', sev='ESI 3')
+    sev_list = ['ESI 1', 'ESI 2', 'ESI 3', 'ESI 4', 'ESI 5', 'Total']
+    out_dict = {}
+    for pat_sev in sev_list:
+        mse_man, mae_man = run_model(inp_file='data/patient_arrival_data.csv', sev=pat_sev)
+        out_dict[pat_sev] = [mse_man, mae_man]
+    out_df = pd.DataFrame.from_dict(out_dict, orient='index', columns=['MSE', 'MAE'])
+    print(out_df.shape)
+    print(out_df.head(n=6))
+    out_df.to_csv('data/hourly_pred_RNN.csv')
