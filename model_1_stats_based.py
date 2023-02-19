@@ -5,7 +5,6 @@ from utils import mae, mse, moving_average_forecast
 
 
 def run_model(inp_file, sev='ESI 3'):
-    # INP_FILE = 'data/patient_arrival_data.csv'
     print('\n*****************************************************')
     print('Running for input file: ', inp_file.split('/')[-1])
     print('Patient Severity: ', sev)
