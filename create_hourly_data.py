@@ -4,7 +4,9 @@ import numpy as np
 INP_FILE = 'data/patient_arrival_data.csv'
 
 print('Running for input file: ', INP_FILE.split('/')[-1])
-data = pd.read_csv(INP_FILE, dtype=object)
+data = pd.read_csv(INP_FILE, dtype={'ESI 1': 'float', 'ESI 2': 'float',
+                                    'ESI 3': 'float', 'ESI 4': 'float',
+                                    'ESI 5': 'float', 'Total': 'float'})
 print(data.shape)
 print(data.dtypes)
 
