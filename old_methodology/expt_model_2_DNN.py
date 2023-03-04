@@ -70,7 +70,7 @@ def model_forecast(model, series, window_size, batch_size):
     return forecast
 
 
-INP_FILE = 'data/patient_arrival_data.csv'
+INP_FILE = '../data/patient_arrival_data.csv'
 
 # Read the patient arrival and process the Date column
 data = pd.read_csv(INP_FILE, dtype={'ESI 3': float})

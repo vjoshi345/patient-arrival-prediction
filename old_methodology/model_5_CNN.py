@@ -145,7 +145,7 @@ if __name__ == '__main__':
     sev_list = ['ESI 1', 'ESI 2', 'ESI 3', 'ESI 4', 'ESI 5', 'Total']
     out_dict = {}
     for pat_sev in sev_list:
-        mse_man, mae_man = run_model(inp_file='data/patient_arrival_data.csv', sev=pat_sev)
+        mse_man, mae_man = run_model(inp_file='../data/patient_arrival_data.csv', sev=pat_sev)
         out_dict[pat_sev] = [mse_man, mae_man]
     out_df = pd.DataFrame.from_dict(out_dict, orient='index', columns=['MSE', 'MAE'])
     print(out_df.shape)
