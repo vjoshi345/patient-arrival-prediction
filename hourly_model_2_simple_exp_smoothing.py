@@ -1,6 +1,5 @@
 import numpy as np
-import tensorflow as tf
-from statsmodels.tsa.api import ExponentialSmoothing, SimpleExpSmoothing, Holt
+from statsmodels.tsa.api import SimpleExpSmoothing
 from utils import mae, mse
 
 
@@ -32,9 +31,7 @@ def run_model(sev='ESI 3', forecast_range='hourly'):
     simp_exp_forecast = np.asarray(simp_exp_forecast)
     simp_exp_forecast_flatten = np.ndarray.flatten(simp_exp_forecast, order='F')
 
-    print('MSE (tf):', tf.keras.metrics.mean_squared_error(x_valid_flatten, simp_exp_forecast_flatten).numpy())
     print('MSE (manual):', mse(x_valid_flatten, simp_exp_forecast_flatten))
-    print('MAE (tf):', tf.keras.metrics.mean_absolute_error(x_valid_flatten, simp_exp_forecast_flatten).numpy())
     print('MAE (manual):', mae(x_valid_flatten, simp_exp_forecast_flatten))
 
 
