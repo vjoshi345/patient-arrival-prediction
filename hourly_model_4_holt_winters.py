@@ -15,6 +15,8 @@ def run_model(sev='ESI 3', forecast_range='hourly'):
     x_valid_flatten = np.ndarray.flatten(x_valid, order='F')
     print(x_valid_flatten.shape)
 
+    # NOTE: the time series values must be strictly positive while using multiplicative trend or seasonal
+    # components. Therefore, in the below we only utilize additive trend/seasonality
     # Model 1: Holt-Winters' additive trend-additive seasonal
     print('\n *** Metrics for the Holt-Winters\' additive trend-additive seasonal ***')
     holt_add_add_forecast = list()
