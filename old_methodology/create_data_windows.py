@@ -2,7 +2,7 @@ import pandas as pd
 from datetime import datetime
 from collections import Counter
 
-INP_FILE = 'data/patient_arrival_data.csv'
+INP_FILE = '../data/patient_arrival_data.csv'
 
 
 def parse_func(date_col):

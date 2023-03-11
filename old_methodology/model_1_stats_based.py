@@ -75,5 +75,5 @@ if __name__ == '__main__':
     run_model(inp_file='../data/patient_arrival_data.csv', sev='ESI 5')
 
     # Weekly forecasting
-    run_model(inp_file='../data/patient_arrival_weekly.csv', sev='ESI 3', split_time=182,
+    run_model(inp_file='patient_arrival_weekly.csv', sev='ESI 3', split_time=182,
               n_points=4, n_avg=4, n_seasonality=4, win_size=3)
