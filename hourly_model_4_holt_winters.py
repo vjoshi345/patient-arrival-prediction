@@ -17,7 +17,22 @@ def run_model(sev='ESI 3', forecast_range='hourly'):
 
     # NOTE: the time series values must be strictly positive while using multiplicative trend or seasonal
     # components. Therefore, in the below we only utilize additive trend/seasonality
-    # Model 1: Holt-Winters' additive trend-additive seasonal
+    # Model 1: Holt-Winters' no trend-additive seasonal
+    print('\n *** Metrics for the Holt-Winters\' no trend-additive seasonal ***')
+    holt_add_sea_forecast = list()
+    for i in range(24):
+        train_list = list(x_train[i, :])
+        forecast = []
+        holt_add_sea_fit = ExponentialSmoothing(train_list, seasonal_periods=7, trend=None, seasonal='add',
+                                                initialization_method="estimated").fit()
+        forecast.append(list(holt_add_sea_fit.forecast(90)))
+        holt_add_sea_forecast.append(forecast)
+    holt_add_sea_forecast = np.asarray(holt_add_sea_forecast)
+    holt_add_sea_forecast_flatten = np.ndarray.flatten(holt_add_sea_forecast, order='F')
+    print('MSE (manual):', mse(x_valid_flatten, holt_add_sea_forecast_flatten))
+    print('MAE (manual):', mae(x_valid_flatten, holt_add_sea_forecast_flatten))
+
+    # Model 2: Holt-Winters' additive trend-additive seasonal
     print('\n *** Metrics for the Holt-Winters\' additive trend-additive seasonal ***')
     holt_add_add_forecast = list()
     for i in range(24):
@@ -32,7 +47,7 @@ def run_model(sev='ESI 3', forecast_range='hourly'):
     print('MSE (manual):', mse(x_valid_flatten, holt_add_add_forecast_flatten))
     print('MAE (manual):', mae(x_valid_flatten, holt_add_add_forecast_flatten))
 
-    # Model 2: Holt-Winters' additive damped trend-additive seasonal
+    # Model 3: Holt-Winters' additive damped trend-additive seasonal
     print('\n *** Metrics for the Holt-Winters\' additive damped trend-additive seasonal ***')
     holt_add_damped_add_forecast = list()
     for i in range(24):
@@ -50,4 +65,4 @@ def run_model(sev='ESI 3', forecast_range='hourly'):
 
 if __name__ == '__main__':
     # Hourly forecast for a day (validated over last 90 days)
-    run_model(sev='ESI 1', forecast_range='hourly')
+    run_model(sev='Total', forecast_range='hourly')
