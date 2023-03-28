@@ -50,7 +50,7 @@ def model_forecast(model, train_series, win_size, n_step):
     return forecast
 
 
-def run_model(sev='ESI 3', window_size=7):
+def run_model(sev='Total', window_size=7):
     print('\n*****************************************************')
     print('Patient Severity: ', sev)
 
@@ -76,7 +76,10 @@ def run_model(sev='ESI 3', window_size=7):
         model.fit(x_train, y_train)
 
         # Predict for the last 90 days: use each new forecast to predict the next value
-        forecast = model_forecast(model, data_train, window_size, 90)
+        try:
+            forecast = model_forecast(model, data_train, window_size, 90)
+        except Exception:
+            continue
         forecast = np.array(forecast)
 
         mse_manual = mse(data_valid, forecast)
@@ -93,4 +96,4 @@ def run_model(sev='ESI 3', window_size=7):
 
 
 if __name__ == '__main__':
-    run_model(sev='Total', window_size=7)
+    run_model(sev='Total', window_size=30)
