@@ -64,30 +64,33 @@ def run_model(sev='ESI 3', window_size=7):
     x_train, y_train = windowed_dataset(data_train, window_size)
 
     # Train xgboost regression model
-    model = XGBRegressor(objective='reg:squarederror', n_estimators=100, booster='gbtree', verbosity=1)
-    model.fit(x_train, y_train)
-
-    # Predict for the last 90 days: use each new forecast to predict the next value
-    forecast = model_forecast(model, data_train, window_size, 90)
-    forecast = np.array(forecast)
-
     print(f'\n *** Metrics for xgboost linear model (with window size={window_size}) ***')
-    mse_manual = mse(data_valid, forecast)
-    print('MSE (manual):', mse_manual)
-    mae_manual = mae(data_valid, forecast)
-    print('MAE (manual):', mae_manual)
+    n_est_lis, lr_lis, booster_lis = [50, 100, 200], [0.001, 0.01, 0.1, 1], ['gbtree', 'gblinear']
+    config = list(product(n_est_lis, lr_lis, booster_lis))
+    best_mse, best_mae, best_params = float('Inf'), float('Inf'), None
+    for params in config:
+        print('******************************')
+        print('Training for params:', params)
+        model = XGBRegressor(objective='reg:squarederror', n_estimators=params[0],
+                             learning_rate=params[1], booster=params[2], verbosity=1)
+        model.fit(x_train, y_train)
 
-    return mse_manual, mae_manual
+        # Predict for the last 90 days: use each new forecast to predict the next value
+        forecast = model_forecast(model, data_train, window_size, 90)
+        forecast = np.array(forecast)
+
+        mse_manual = mse(data_valid, forecast)
+        mae_manual = mae(data_valid, forecast)
+        print('MSE (manual):', mse_manual)
+        print('MAE (manual):', mae_manual)
+
+        if mse_manual < best_mse:
+            best_mse, best_mae = mse_manual, mae_manual
+            best_params = params
+    print('\nBest performance obtained with:', best_params)
+    print('MSE:', best_mse)
+    print('MAE:', best_mae)
 
 
 if __name__ == '__main__':
     run_model(sev='Total', window_size=7)
-    # sev_list = ['ESI 1', 'ESI 2', 'ESI 3', 'ESI 4', 'ESI 5', 'Total']
-    # out_dict = {}
-    # for pat_sev in sev_list:
-    #     mse_man, mae_man = run_model(sev=pat_sev)
-    #     out_dict[pat_sev] = [mse_man, mae_man]
-    # out_df = pd.DataFrame.from_dict(out_dict, orient='index', columns=['MSE', 'MAE'])
-    # print(out_df.shape)
-    # print(out_df.head(n=6))
-    # out_df.to_csv('results/daily_pred_xgboost.csv')
