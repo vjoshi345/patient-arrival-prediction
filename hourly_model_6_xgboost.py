@@ -1,5 +1,6 @@
 import numpy as np
 from xgboost import XGBRegressor
+from itertools import product
 from utils import mae, mse
 
 
@@ -64,21 +65,34 @@ def run_model(sev='Total', window_size=30):
     # XGBoost Regression Model
     # Predict for the last 90 days: use each new forecast to predict the next value
     print('\n *** Metrics for the XGBoost Regression model ***')
-    xgboost_forecast = list()
-    for i in range(24):
-        train_hour = x_train[i, :]
-        x_train_hour, y_train_hour = windowed_dataset(train_hour, window_size)
-        model = XGBRegressor(objective='reg:squarederror', n_estimators=50,
-                             learning_rate=0.1, booster='gblinear', verbosity=1)
-        model.fit(x_train_hour, y_train_hour)
-        forecast = model_forecast(model, train_hour, window_size, 90)
-        xgboost_forecast.append(forecast)
-    xgboost_forecast = np.asarray(xgboost_forecast)
-    xgboost_forecast_flatten = np.ndarray.flatten(xgboost_forecast, order='F')
-    print('MSE (manual):', mse(x_valid_flatten, xgboost_forecast_flatten))
-    print('MAE (manual):', mae(x_valid_flatten, xgboost_forecast_flatten))
+    n_est_lis, lr_lis, booster_lis = [50, 100, 200], [0.001, 0.01, 0.1, 1], ['gbtree', 'gblinear']
+    config = list(product(n_est_lis, lr_lis, booster_lis))
+    best_mse, best_mae, best_params = float('Inf'), float('Inf'), None
+    for params in config:
+        print('******************************')
+        print('Training for params:', params)
+        xgboost_forecast = list()
+        for i in range(24):
+            train_hour = x_train[i, :]
+            x_train_hour, y_train_hour = windowed_dataset(train_hour, window_size)
+            model = XGBRegressor(objective='reg:squarederror', n_estimators=50,
+                                 learning_rate=0.1, booster='gblinear', verbosity=1)
+            model.fit(x_train_hour, y_train_hour)
+            forecast = model_forecast(model, train_hour, window_size, 90)
+            xgboost_forecast.append(forecast)
+        xgboost_forecast = np.asarray(xgboost_forecast)
+        xgboost_forecast_flatten = np.ndarray.flatten(xgboost_forecast, order='F')
+        mse_manual = mse(x_valid_flatten, xgboost_forecast_flatten)
+        mae_manual = mae(x_valid_flatten, xgboost_forecast_flatten)
+        print('Current metrics -> MSE: ', mse_manual, ' MAE: ', mae_manual)
+        if mse_manual < best_mse:
+            best_mse, best_mae = mse_manual, mae_manual
+            best_params = params
+    print('\nBest performance obtained with:', best_params)
+    print('MSE:', best_mse)
+    print('MAE:', best_mae)
 
 
 if __name__ == '__main__':
     # Hourly forecast for a day (validated over last 90 days)
-    run_model(sev='Total', window_size=30)
+    run_model(sev='ESI 5', window_size=30)
