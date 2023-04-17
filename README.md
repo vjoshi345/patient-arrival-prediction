@@ -1,1 +1,10 @@
-In this repo, I have have used various statistical and machine learning models to predict patient arrival to the ED. Patient arrival is predicted for different ESI's and both short-term (next day hourly forecast) and long-term (daily forecast for 90 days) forecasts are done.
+General Information
+------------------
+
+### Title:
+
+Statistical and machine learning models to predict patient arrival to the ED. Patient arrival is predicted for different ESI's and both short-term (next day hourly forecast) and long-term (daily forecast for 90 days) forecasts are done.
+
+### Author Information:
+- Varun Joshi (vjoshi345@gmail.com), MS in Machine Learning (2017), Carnegie Mellon University
+
