@@ -1,6 +1,6 @@
 import numpy as np
 from statsmodels.tsa.api import ExponentialSmoothing
-from utils import mae, mse
+from utils import mae, mse, mape
 
 
 def run_model(sev='ESI 3'):
@@ -46,6 +46,7 @@ def run_model(sev='ESI 3'):
     holt_add_add_forecast_flatten = np.ndarray.flatten(holt_add_add_forecast, order='F')
     print('MSE (manual):', mse(x_valid_flatten, holt_add_add_forecast_flatten))
     print('MAE (manual):', mae(x_valid_flatten, holt_add_add_forecast_flatten))
+    print('MAPE (manual):', mape(x_valid_flatten, holt_add_add_forecast_flatten))
 
     # Model 3: Holt-Winters' additive damped trend-additive seasonal
     print('\n *** Metrics for the Holt-Winters\' additive damped trend-additive seasonal ***')
@@ -65,4 +66,4 @@ def run_model(sev='ESI 3'):
 
 if __name__ == '__main__':
     # Daily forecast for a week (validated over last 4 weeks)
-    run_model(sev='ESI 5')
+    run_model(sev='Total')
