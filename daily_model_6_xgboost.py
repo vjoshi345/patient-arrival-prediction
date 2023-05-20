@@ -1,7 +1,7 @@
 import numpy as np
 from xgboost import XGBRegressor
 from itertools import product
-from utils import mae, mse
+from utils import mae, mse, mape
 
 
 def windowed_dataset(series, win_size):
@@ -84,15 +84,18 @@ def run_model(sev='Total', window_size=7):
 
         mse_manual = mse(data_valid, forecast)
         mae_manual = mae(data_valid, forecast)
+        mape_manual = mape(data_valid, forecast)
         print('MSE (manual):', mse_manual)
         print('MAE (manual):', mae_manual)
+        print('MAPE (manual):', mape_manual)
 
         if mse_manual < best_mse:
-            best_mse, best_mae = mse_manual, mae_manual
+            best_mse, best_mae, best_mape = mse_manual, mae_manual, mape_manual
             best_params = params
     print('\nBest performance obtained with:', best_params)
     print('MSE:', best_mse)
     print('MAE:', best_mae)
+    print('MAPE:', best_mape)
 
 
 if __name__ == '__main__':
