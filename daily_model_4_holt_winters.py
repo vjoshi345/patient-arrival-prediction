@@ -1,6 +1,6 @@
 import numpy as np
 from statsmodels.tsa.api import ExponentialSmoothing
-from utils import mae, mse
+from utils import mae, mse, mape
 
 
 def run_model(sev='ESI 3', forecast_range='daily'):
@@ -34,6 +34,7 @@ def run_model(sev='ESI 3', forecast_range='daily'):
 
     print('MSE (manual):', mse(x_valid, holt_add_add_forecast))
     print('MAE (manual):', mae(x_valid, holt_add_add_forecast))
+    print('MAPE (manual):', mape(x_valid, holt_add_add_forecast))
 
     # Model 3: Holt-Winters' additive damped trend-additive seasonal
     print('\n *** Metrics for the Holt-Winters\' additive damped trend-additive seasonal ***')
