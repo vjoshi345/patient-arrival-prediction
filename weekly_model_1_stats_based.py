@@ -1,5 +1,5 @@
 import numpy as np
-from utils import mae, mse, moving_average_forecast
+from utils import mae, mse, mape, moving_average_forecast
 
 
 def run_model(sev='ESI 3'):
@@ -31,6 +31,7 @@ def run_model(sev='ESI 3'):
 
     print('MSE (manual):', mse(x_valid_flatten, naive_forecast_flatten))
     print('MAE (manual):', mae(x_valid_flatten, naive_forecast_flatten))
+    print('MAPE (manual):', mape(x_valid_flatten, naive_forecast_flatten))
 
     # Model 2: moving average forecast
     print('\n *** Metrics for the moving average forecast ***')
@@ -89,4 +90,4 @@ def run_model(sev='ESI 3'):
 
 if __name__ == '__main__':
     # Daily forecast for a week (validated over last 4 weeks)
-    run_model(sev='ESI 5')
+    run_model(sev='Total')
