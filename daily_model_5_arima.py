@@ -1,5 +1,5 @@
 import numpy as np
-from utils import mae, mse
+from utils import mae, mse, mape
 from pmdarima.arima import auto_arima
 
 
@@ -21,6 +21,7 @@ def run_model(sev='ESI 3', forecast_range='daily'):
     arima_forecast = arima_model.fit(x_train).predict(90)
     print('MSE (manual):', mse(x_valid, arima_forecast))
     print('MAE (manual):', mae(x_valid, arima_forecast))
+    print('MAPE (manual):', mape(x_valid, arima_forecast))
 
     # Model 2: Auto ARIMA with seasonality
     print('\n *** Use auto_arima method to choose the best ARIMA model (with seasonality) ***')
@@ -31,6 +32,7 @@ def run_model(sev='ESI 3', forecast_range='daily'):
     arima_forecast_s = arima_model_s.fit(x_train).predict(90)
     print('MSE (manual):', mse(x_valid, arima_forecast_s))
     print('MAE (manual):', mae(x_valid, arima_forecast_s))
+    print('MAPE (manual):', mape(x_valid, arima_forecast_s))
 
 
 if __name__ == '__main__':
