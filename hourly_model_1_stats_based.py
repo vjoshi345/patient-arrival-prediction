@@ -1,6 +1,6 @@
 import numpy as np
 import tensorflow as tf
-from utils import mae, mse, moving_average_forecast
+from utils import mae, mse, mape, moving_average_forecast
 
 
 def run_model(sev='ESI 3', forecast_range='hourly'):
@@ -34,6 +34,8 @@ def run_model(sev='ESI 3', forecast_range='hourly'):
     print('MSE (manual):', mse(x_valid_flatten, naive_forecast_flatten))
     print('MAE (tf):', tf.keras.metrics.mean_absolute_error(x_valid_flatten, naive_forecast_flatten).numpy())
     print('MAE (manual):', mae(x_valid_flatten, naive_forecast_flatten))
+    print('MAPE (tf):', tf.keras.metrics.mean_absolute_percentage_error(x_valid_flatten, naive_forecast_flatten).numpy())
+    print('MAPE (manual):', mape(x_valid_flatten, naive_forecast_flatten))
 
     # Model 2: moving average forecast
     print('\n *** Metrics for the moving average forecast ***')
