@@ -1,6 +1,6 @@
 import numpy as np
 from pmdarima.arima import auto_arima
-from utils import mae, mse
+from utils import mae, mse, mape
 
 
 def run_model(sev='ESI 3'):
@@ -48,11 +48,13 @@ def run_model(sev='ESI 3'):
     print('*** ARIMA without seasonality ***')
     print('MSE (manual):', mse(x_valid_flatten, arima_forecast_flatten))
     print('MAE (manual):', mae(x_valid_flatten, arima_forecast_flatten))
+    print('MAPE (manual):', mape(x_valid_flatten, arima_forecast_flatten))
     print('\n *** ARIMA with seasonality ***')
     print('MSE (manual):', mse(x_valid_flatten, arima_forecast_s_flatten))
     print('MAE (manual):', mae(x_valid_flatten, arima_forecast_s_flatten))
+    print('MAPE (manual):', mape(x_valid_flatten, arima_forecast_s_flatten))
 
 
 if __name__ == '__main__':
     # Daily forecast for a week (validated over last 4 weeks)
-    run_model(sev='ESI 5')
+    run_model(sev='Total')
