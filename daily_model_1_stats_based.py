@@ -1,5 +1,5 @@
 import numpy as np
-from utils import mae, mse, moving_average_forecast
+from utils import mae, mse, mape, moving_average_forecast
 
 
 def run_model(sev='ESI 3', forecast_range='daily'):
@@ -25,6 +25,7 @@ def run_model(sev='ESI 3', forecast_range='daily'):
 
     print('MSE (manual):', mse(x_valid, naive_forecast))
     print('MAE (manual):', mae(x_valid, naive_forecast))
+    print('MAPE (manual):', mape(x_valid, naive_forecast))
 
     # Model 2: moving average forecast
     print('\n *** Metrics for the moving average forecast ***')
