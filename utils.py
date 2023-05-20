@@ -31,3 +31,7 @@ def mse(ar1, ar2):
 
 def mae(ar1, ar2):
     return np.mean(np.abs(ar1 - ar2))
+
+
+def mape(cnt_arr, var_arr):
+    return np.mean(np.abs(np.divide(cnt_arr - var_arr, cnt_arr)))
