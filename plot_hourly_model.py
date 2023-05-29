@@ -40,6 +40,10 @@ def run_model(sev, plot_hour):
     plt.savefig(f'results/hourly_{sev}.png')
     plt.show()
 
+    # Save the actual and forecasted values
+    np.save(f'results/hourly_actual_{sev}.npy', arr=x_valid[plot_hour, :])
+    np.save(f'results/hourly_forecast_HW_add_trend_add_seasonality_{sev}.npy', arr=holt_add_add_forecast[plot_hour, :])
+
 
 if __name__ == '__main__':
     # Hourly forecast for a day (validated over last 90 days)
