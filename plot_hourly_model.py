@@ -16,25 +16,25 @@ def run_model(sev, plot_hour):
     x_valid_flatten = np.ndarray.flatten(x_valid, order='F')
     print(x_valid_flatten.shape)
 
-    # Model 1: Holt-Winters' no trend-additive seasonal
-    print('\n *** Metrics for the Holt-Winters\' no trend-additive seasonal ***')
-    holt_add_sea_forecast = list()
+    # Model 1: Holt-Winters' additive trend-additive seasonal
+    print('\n *** Metrics for the Holt-Winters\' additive trend-additive seasonal ***')
+    holt_add_add_forecast = list()
     for i in range(24):
         train_list = list(x_train[i, :])
         forecast = []
-        holt_add_sea_fit = ExponentialSmoothing(train_list, seasonal_periods=7, trend=None, seasonal='add',
+        holt_add_add_fit = ExponentialSmoothing(train_list, seasonal_periods=7, trend='add', seasonal='add',
                                                 initialization_method="estimated").fit()
-        forecast.append(list(holt_add_sea_fit.forecast(90)))
-        holt_add_sea_forecast.append(forecast)
-    holt_add_sea_forecast = np.asarray(holt_add_sea_forecast).reshape((24, 90))
-    holt_add_sea_forecast_flatten = np.ndarray.flatten(holt_add_sea_forecast, order='F')
-    print('MSE (manual):', mse(x_valid_flatten, holt_add_sea_forecast_flatten))
-    print('MAE (manual):', mae(x_valid_flatten, holt_add_sea_forecast_flatten))
+        forecast.append(list(holt_add_add_fit.forecast(90)))
+        holt_add_add_forecast.append(forecast)
+    holt_add_add_forecast = np.asarray(holt_add_add_forecast).reshape((24, 90))
+    holt_add_add_forecast_flatten = np.ndarray.flatten(holt_add_add_forecast, order='F')
+    print('MSE (manual):', mse(x_valid_flatten, holt_add_add_forecast_flatten))
+    print('MAE (manual):', mae(x_valid_flatten, holt_add_add_forecast_flatten))
 
     # Plot for Holt Winters no trend-additive seasonal
     plt.figure()
     plt.plot(x_valid[plot_hour, :], color='blue', label='actual')
-    plt.plot(holt_add_sea_forecast[plot_hour, :], color='green', label='forecast')
+    plt.plot(holt_add_add_forecast[plot_hour, :], color='green', label='forecast')
     plt.title(f'Hourly forecast: {sev}')
     plt.legend()
     plt.savefig(f'results/hourly_{sev}.png')
