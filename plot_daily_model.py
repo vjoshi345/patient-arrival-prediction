@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from statsmodels.tsa.api import ExponentialSmoothing
+from utils import mae, mse
 
 
 def run_model(sev):
@@ -13,16 +14,19 @@ def run_model(sev):
     print(x_train.shape)
     print(x_valid.shape)
 
-    # Model 1: Holt-Winters' no trend-additive seasonal
-    print('\n *** Metrics for the Holt-Winters\' no trend-additive seasonal ***')
-    holt_add_sea_fit = ExponentialSmoothing(x_train, seasonal_periods=7, trend=None, seasonal='add',
+    # Model 1: Holt-Winters' additive trend-additive seasonal
+    print('\n *** Metrics for the Holt-Winters\' additive trend-additive seasonal ***')
+    holt_add_add_fit = ExponentialSmoothing(x_train, seasonal_periods=7, trend='add', seasonal='add',
                                             initialization_method="estimated").fit()
-    holt_add_sea_forecast = holt_add_sea_fit.forecast(90)
+    holt_add_add_forecast = holt_add_add_fit.forecast(90)
 
-    # Plot for Holt Winters no trend-additive seasonal
+    print('MSE (manual):', mse(x_valid, holt_add_add_forecast))
+    print('MAE (manual):', mae(x_valid, holt_add_add_forecast))
+
+    # Plot for Holt Winters additive trend-additive seasonal
     plt.figure()
     plt.plot(x_valid, color='blue', label='actual')
-    plt.plot(holt_add_sea_forecast, color='green', label='forecast')
+    plt.plot(holt_add_add_forecast, color='green', label='forecast')
     plt.title(f'Daily forecast: {sev}')
     plt.legend()
     plt.savefig(f'results/daily_{sev}.png')
