@@ -32,6 +32,10 @@ def run_model(sev):
     plt.savefig(f'results/daily_{sev}.png')
     plt.show()
 
+    # Save the actual and forecasted values
+    np.save(f'results/daily_actual_{sev}.npy', arr=x_valid)
+    np.save(f'results/daily_forecast_HW_add_trend_add_seasonality_{sev}.npy', arr=holt_add_add_forecast)
+
 
 if __name__ == '__main__':
     # Daily patient arrival forecast (validated over last 90 days)
